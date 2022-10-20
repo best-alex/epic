@@ -49,14 +49,16 @@ class Task
                         $result[$id]['relative'] = $relates;
                     }
                     $result[$id]['relative'] = array_unique(array_merge($result[$id]['relative'], $relates));
-                    $newMin = min($result[$id]['relative']);
                     foreach ($result[$id]['relative'] as $n) {
-                        $result[$n]['parent'] = $newMin;
-                        $result[$n]['relative'] = $result[$id]['relative'];
+                        $result[$n]['relative'] = !empty($result[$n]['relative']) ? array_unique(
+                            array_merge($result[$id]['relative'], $result[$n]['relative'])
+                        ) : $result[$id]['relative'];
+                        $result[$n]['parent'] = min($result[$n]['relative']);
                     }
                 }
             }
         }
+        ksort($result);
         return $result;
     }
 
@@ -76,6 +78,7 @@ class Task
         $headerColNum = $this->getHeaderColNums($this->data[0]);
         $this->prepareData($headerColNum);
         $duplicates = $this->getDuplicateChains($headerColNum);
+        print_r($duplicates);
         unset($this->data);
         $crossed = $this->crossDuplicateAndSetMinParent($duplicates);
         $this->writeOut($crossed);

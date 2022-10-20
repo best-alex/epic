@@ -78,7 +78,6 @@ class Task
         $headerColNum = $this->getHeaderColNums($this->data[0]);
         $this->prepareData($headerColNum);
         $duplicates = $this->getDuplicateChains($headerColNum);
-        print_r($duplicates);
         unset($this->data);
         $crossed = $this->crossDuplicateAndSetMinParent($duplicates);
         $this->writeOut($crossed);
